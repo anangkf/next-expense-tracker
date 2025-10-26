@@ -12,13 +12,13 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import Logo from "@/features/components/Logo";
 import {
   Clock,
   Gauge,
   ShieldCheck,
   Sparkles,
   UserRoundPlus,
-  Wallet,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -29,11 +29,6 @@ export default function LoginForm() {
       <div className="flex flex-col lg:flex-row justify-center w-full max-w-5xl gap-6">
         {/* LOGIN BANNER */}
         <Card className="w-full lg:w-7/12 bg-brand-50/50 backdrop-blur-md h-fit">
-          {/* <CardHeader>
-            <h4 className="flex items-center gap-2 text-brand-600">
-              <ChartLine /> Get clarity fast
-            </h4>
-          </CardHeader> */}
           <CardContent>
             <AspectRatio ratio={16 / 9} className="rounded-md">
               <Image
@@ -65,11 +60,7 @@ export default function LoginForm() {
         {/* LOGIN FORM */}
         <Card className="w-full lg:w-5/12 h-fit">
           <CardHeader>
-            <div className="flex justify-between">
-              <h4 className="flex items-center gap-2 text-brand-600">
-                <Wallet /> Exfens Trekker
-              </h4>
-            </div>
+            <Logo />
             <CardTitle>Wellcome back</CardTitle>
             <CardDescription>Login to access your dashboard</CardDescription>
           </CardHeader>
