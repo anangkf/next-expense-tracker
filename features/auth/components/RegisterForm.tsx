@@ -83,13 +83,13 @@ export default function RegisterForm() {
           </CardHeader>
           <CardContent>
             <form action="">
-              <div className="grid w-full max-w-sm items-center">
+              <div className="grid w-full items-center">
                 <Label htmlFor="email" className="mb-2 mt-4">
                   Email
                 </Label>
                 <Input id="email" type="email" placeholder="Enter your email" />
               </div>
-              <div className="grid w-full max-w-sm items-center">
+              <div className="grid w-full items-center">
                 <Label htmlFor="username" className="mb-2 mt-4">
                   Username
                 </Label>
@@ -99,7 +99,7 @@ export default function RegisterForm() {
                   placeholder="Enter your username"
                 />
               </div>
-              <div className="grid w-full max-w-sm items-center">
+              <div className="grid w-full items-center">
                 <Label htmlFor="password" className="mb-2 mt-4">
                   Password
                 </Label>
