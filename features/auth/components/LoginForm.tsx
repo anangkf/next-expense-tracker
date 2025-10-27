@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import Logo from "@/features/components/Logo";
+import Logo from "@/components/ui/logo";
 import {
   Clock,
   Gauge,
@@ -99,7 +99,7 @@ export default function LoginForm() {
             </form>
           </CardContent>
           <CardFooter className="flex justify-center items-center gap-1">
-            <span>Don't have an account?</span>
+            <span>Don&apos;t have an account?</span>
             <Link href="/register">
               <Button variant="link" className="text-brand-500 p-0">
                 Create one

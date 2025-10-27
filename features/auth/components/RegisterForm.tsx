@@ -12,8 +12,8 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import Logo from "@/features/components/Logo";
-import { Bell, ChartLine, Target, UserRoundPlus, Wallet } from "lucide-react";
+import Logo from "@/components/ui/logo";
+import { Bell, ChartLine, Target, UserRoundPlus } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
