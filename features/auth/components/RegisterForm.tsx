@@ -13,6 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Logo from "@/components/ui/logo";
+import Stepper from "@/components/ui/stepper";
 import { Bell, ChartLine, Target, UserRoundPlus } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -61,20 +62,7 @@ export default function RegisterForm() {
           <CardHeader>
             <div className="flex justify-between">
               <Logo />
-              <span className="flex items-center gap-2 text-sm p-0">
-                <p className="m-0 text-neutral-500">Step</p>
-                <div className="flex items-center gap-1">
-                  <Link href="/register">
-                    <div className="w-2 h-2 rounded-full bg-brand-600"></div>
-                  </Link>
-                  <Link href="/register">
-                    <div className="w-2 h-2 rounded-full bg-neutral-300"></div>
-                  </Link>
-                  <Link href="/register">
-                    <div className="w-2 h-2 rounded-full bg-neutral-300"></div>
-                  </Link>
-                </div>
-              </span>
+              <Stepper length={3} currentStep={1} title="Step" />
             </div>
             <CardTitle>Create your account</CardTitle>
             <CardDescription>
