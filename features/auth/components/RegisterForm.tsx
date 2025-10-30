@@ -1,6 +1,6 @@
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AspectRatio } from "@/components/ui/aspect-ratio";
-import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription, AlertTitle } from "@components/ui/alert";
+import { AspectRatio } from "@components/ui/aspect-ratio";
+import { Button } from "@components/ui/button";
 import {
   Card,
   CardAction,
@@ -9,11 +9,11 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import Logo from "@/components/ui/logo";
-import Stepper from "@/components/ui/stepper";
+} from "@components/ui/card";
+import { Input } from "@components/ui/input";
+import { Label } from "@components/ui/label";
+import Logo from "@components/ui/logo";
+import Stepper from "@components/ui/stepper";
 import { Bell, Target, UserRoundPlus } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
