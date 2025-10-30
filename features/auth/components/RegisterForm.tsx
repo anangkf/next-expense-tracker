@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Logo from "@/components/ui/logo";
 import Stepper from "@/components/ui/stepper";
-import { Bell, ChartLine, Target, UserRoundPlus } from "lucide-react";
+import { Bell, Target, UserRoundPlus } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
