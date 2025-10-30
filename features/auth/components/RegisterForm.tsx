@@ -23,11 +23,11 @@ export default function RegisterForm() {
       <div className="flex flex-col lg:flex-row justify-center w-full max-w-5xl gap-6">
         {/* REGISTER BANNER */}
         <Card className="w-full lg:w-7/12 bg-brand-50/50 backdrop-blur-md h-fit">
-          <CardHeader>
+          {/* <CardHeader>
             <h4 className="flex items-center gap-2 text-brand-600">
               <ChartLine /> Get clarity fast
             </h4>
-          </CardHeader>
+          </CardHeader> */}
           <CardContent>
             <AspectRatio ratio={16 / 9} className="rounded-md">
               <Image
