@@ -1,9 +1,10 @@
 import { AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { CardAction } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+import Combobox from "@/components/ui/combobox";
 import { Label } from "@/components/ui/label";
 import { Toggle } from "@/components/ui/toggle";
+import { currencies } from "@/lib/currencies";
 import {
   ArrowRight,
   CircleEllipsis,
@@ -56,6 +57,11 @@ const baseCategories = [
   },
 ];
 
+const currencyOptions = currencies.map((currency) => ({
+  label: `${currency.symbol} - ${currency.code}`,
+  value: currency.code,
+}));
+
 export default function OnboardForm() {
   return (
     <form action="">
@@ -63,11 +69,7 @@ export default function OnboardForm() {
         <Label htmlFor="defaultCurrency" className="mb-2 mt-4">
           Default Currency
         </Label>
-        <Input
-          id="defaultCurrency"
-          type="text"
-          placeholder="Enter your default currency"
-        />
+        <Combobox options={currencyOptions} className="w-full" />
       </div>
       <div className="grid w-full items-center">
         <Label className="mb-2 mt-4">Quick Categories (suggested)</Label>
@@ -86,7 +88,11 @@ export default function OnboardForm() {
       </div>
       <CardAction className="mt-4 w-full">
         <div className="flex justify-between items-center gap-2">
-          <Button type="button" variant={"outline"} className="w-1/2 md:w-1/3">
+          <Button
+            type="button"
+            variant={"outline-brand"}
+            className="w-1/2 md:w-1/3"
+          >
             <SkipForward />
             Skip for now
           </Button>
