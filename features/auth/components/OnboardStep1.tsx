@@ -62,7 +62,7 @@ const currencyOptions = currencies.map((currency) => ({
   value: currency.code,
 }));
 
-export default function OnboardForm() {
+export default function OnboardStep1() {
   return (
     <form action="">
       <div className="grid w-full items-center">

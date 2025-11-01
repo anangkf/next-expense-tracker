@@ -1,7 +1,7 @@
 "use client";
 
 import AuthWrapper from "@/features/auth/components/AuthWrapper";
-import OnboardForm from "@/features/auth/components/OnboardForm";
+import OnboardStep1 from "@/features/auth/components/OnboardStep1";
 import RegisterForm from "@/features/auth/components/RegisterForm";
 import {
   Bell,
@@ -68,7 +68,7 @@ const steps = [
     },
     title: "Set your preferences",
     description: "We'll prefill your workspace for a smoother start",
-    form: <OnboardForm />,
+    form: <OnboardStep1 />,
   },
 ];
 
