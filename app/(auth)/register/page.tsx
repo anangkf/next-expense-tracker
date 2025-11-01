@@ -2,12 +2,16 @@
 
 import AuthWrapper from "@/features/auth/components/AuthWrapper";
 import OnboardStep1 from "@/features/auth/components/OnboardStep1";
+import OnboardStep2 from "@/features/auth/components/OnboardStep2";
 import RegisterForm from "@/features/auth/components/RegisterForm";
 import {
   Bell,
   CircleCheckBig,
+  FolderDown,
   LayoutDashboard,
+  Rocket,
   Target,
+  Timer,
   Wallet,
 } from "lucide-react";
 import { useSearchParams } from "next/navigation";
@@ -55,7 +59,7 @@ const steps = [
           icon: <CircleCheckBig />,
         },
         {
-          title: "Stay notifiedYou can change these anytime",
+          title: "You can change these anytime",
           description: "Edit in Profile or Categories later.",
           icon: <LayoutDashboard />,
         },
@@ -69,6 +73,34 @@ const steps = [
     title: "Set your preferences",
     description: "We'll prefill your workspace for a smoother start",
     form: <OnboardStep1 />,
+  },
+  {
+    id: "onboard2",
+    banner: {
+      title: "Speed up with templates",
+      icon: <FolderDown />,
+      image: "/onboard-2.jpg",
+      alerts: [
+        {
+          title: "Preload common expenses",
+          description: "Daily coffe, commute, rent - ready to reuse.",
+          icon: <Rocket />,
+        },
+        {
+          title: "Takes less than a minute",
+          description: "You can always modify or remove later.",
+          icon: <Timer />,
+        },
+      ],
+    },
+    stepper: {
+      steps: 3,
+      currentStep: 3,
+      title: "Step",
+    },
+    title: "Import starter templatesSet your preferences",
+    description: "We'll add a few templates so you can log expenses faster",
+    form: <OnboardStep2 />,
   },
 ];
 

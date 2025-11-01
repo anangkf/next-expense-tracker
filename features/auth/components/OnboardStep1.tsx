@@ -1,3 +1,5 @@
+"use client";
+
 import { AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { CardAction } from "@/components/ui/card";
@@ -18,6 +20,7 @@ import {
   Tv,
   Zap,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const baseCategories = [
   {
@@ -63,8 +66,16 @@ const currencyOptions = currencies.map((currency) => ({
 }));
 
 export default function OnboardStep1() {
+  const router = useRouter();
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    router.push("/register?step=3");
+  };
+
   return (
-    <form action="">
+    <form onSubmit={handleSubmit}>
       <div className="grid w-full items-center">
         <Label htmlFor="defaultCurrency" className="mb-2 mt-4">
           Default Currency
