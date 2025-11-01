@@ -1,3 +1,5 @@
+"use client";
+
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CardDescription } from "@/components/ui/card";
@@ -13,6 +15,7 @@ import {
   Sparkles,
   UserCog,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const summary = [
   {
@@ -43,6 +46,7 @@ const summary = [
 ];
 
 export default function OnboardFinal() {
+  const router = useRouter();
   return (
     <div>
       <div className="grid w-full items-center">
@@ -107,6 +111,7 @@ export default function OnboardFinal() {
             type="button"
             variant={"outline-brand"}
             className="w-1/2 md:w-1/3 text-left"
+            onClick={() => router.back()}
           >
             <BookOpenCheck />
             Review Templates

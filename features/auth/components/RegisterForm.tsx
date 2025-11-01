@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@components/ui/button";
 import { CardAction } from "@components/ui/card";
 import { Input } from "@components/ui/input";
@@ -12,7 +14,7 @@ export default function RegisterForm() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    router.push("/register?step=2");
+    router.push("/onboarding?step=1");
   };
 
   return (

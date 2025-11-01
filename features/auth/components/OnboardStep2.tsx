@@ -49,7 +49,7 @@ export default function OnboardStep2() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    router.push("/register?step=4");
+    router.push("/onboarding?step=3");
   };
 
   return (
