@@ -80,7 +80,11 @@ export default function OnboardStep1() {
         <Label htmlFor="defaultCurrency" className="mb-2 mt-4">
           Default Currency
         </Label>
-        <Combobox options={currencyOptions} className="w-full" />
+        <Combobox
+          options={currencyOptions}
+          className="w-full"
+          contentAlign="start"
+        />
       </div>
       <div className="grid w-full items-center">
         <Label className="mb-2 mt-4">Quick Categories (suggested)</Label>
