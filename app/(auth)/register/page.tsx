@@ -1,14 +1,18 @@
 "use client";
 
 import AuthWrapper from "@/features/auth/components/AuthWrapper";
+import OnboardFinal from "@/features/auth/components/OnboardFinal";
 import OnboardStep1 from "@/features/auth/components/OnboardStep1";
 import OnboardStep2 from "@/features/auth/components/OnboardStep2";
 import RegisterForm from "@/features/auth/components/RegisterForm";
 import {
   Bell,
+  CheckCircle,
   CircleCheckBig,
   FolderDown,
+  Gauge,
   LayoutDashboard,
+  PartyPopper,
   Rocket,
   Target,
   Timer,
@@ -37,7 +41,7 @@ const steps = [
       ],
     },
     stepper: {
-      steps: 3,
+      steps: 4,
       currentStep: 1,
       title: "Step",
     },
@@ -66,7 +70,7 @@ const steps = [
       ],
     },
     stepper: {
-      steps: 3,
+      steps: 4,
       currentStep: 2,
       title: "Step",
     },
@@ -94,13 +98,42 @@ const steps = [
       ],
     },
     stepper: {
-      steps: 3,
+      steps: 4,
       currentStep: 3,
       title: "Step",
     },
     title: "Import starter templatesSet your preferences",
     description: "We'll add a few templates so you can log expenses faster",
     form: <OnboardStep2 />,
+  },
+  {
+    id: "onboardFinal",
+    banner: {
+      title: "You're all set",
+      icon: <PartyPopper />,
+      image: "/onboard-final.jpg",
+      alerts: [
+        {
+          title: "Templates added",
+          description: "We imported your recommended expense templates.",
+          icon: <CheckCircle />,
+        },
+        {
+          title: "Next: explore dashboard",
+          description: "Get an overview of spending and recent activity.",
+          icon: <Gauge />,
+        },
+      ],
+    },
+    stepper: {
+      steps: 4,
+      currentStep: 4,
+      title: "Step",
+    },
+    title: "All set. Jump into your dashboard",
+    description:
+      "Your workspace is ready with preferences, categories and starter templates",
+    form: <OnboardFinal />,
   },
 ];
 

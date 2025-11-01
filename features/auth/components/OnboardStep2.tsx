@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { CardAction } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -11,6 +13,7 @@ import {
   Wifi,
   X,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const baseTemplates = [
   {
@@ -41,8 +44,16 @@ const baseTemplates = [
 ];
 
 export default function OnboardStep2() {
+  const router = useRouter();
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    router.push("/register?step=4");
+  };
+
   return (
-    <form action="">
+    <form onSubmit={handleSubmit}>
       <div className="grid w-full items-center">
         <Label className="mb-2 mt-4">Recommended templates</Label>
         <div className="flex flex-wrap gap-4 mt-2">
@@ -59,16 +70,16 @@ export default function OnboardStep2() {
         </div>
       </div>
       <CardAction className="mt-4 w-full">
-        <div className="flex justify-between items-center gap-2">
+        <div className="flex justify-between items-stretch gap-2">
           <Button
             type="button"
             variant={"outline-brand"}
-            className="w-1/2 md:w-1/3"
+            className="w-1/2 md:w-1/3 text-left"
           >
             <X />
             No, thanks
           </Button>
-          <Button type="submit" className="w-1/2 md:w-2/3">
+          <Button type="submit" className="w-1/2 md:w-2/3 text-left">
             <Check />
             Add templates
           </Button>

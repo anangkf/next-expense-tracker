@@ -1,8 +1,7 @@
 "use client";
 
-import { AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import { CardAction } from "@/components/ui/card";
+import { CardAction, CardDescription } from "@/components/ui/card";
 import Combobox from "@/components/ui/combobox";
 import { Label } from "@/components/ui/label";
 import { Toggle } from "@/components/ui/toggle";
@@ -102,29 +101,29 @@ export default function OnboardStep1() {
         </div>
       </div>
       <CardAction className="mt-4 w-full">
-        <div className="flex justify-between items-center gap-2">
+        <div className="flex justify-between items-stretch gap-2">
           <Button
             type="button"
             variant={"outline-brand"}
-            className="w-1/2 md:w-1/3"
+            className="w-1/2 md:w-1/3 text-left"
           >
             <SkipForward />
             Skip for now
           </Button>
-          <Button type="submit" className="w-1/2 md:w-2/3">
+          <Button type="submit" className="w-1/2 md:w-2/3 text-left">
             <ArrowRight />
             Continue
           </Button>
         </div>
         <div className="flex flex-col gap-2 mt-4 w-full">
-          <AlertDescription className="flex items-center gap-1">
+          <CardDescription className="flex items-center gap-1">
             <Sparkles size={16} />
             You can add more categories later.
-          </AlertDescription>
-          <AlertDescription className="flex items-center gap-1">
+          </CardDescription>
+          <CardDescription className="flex items-center gap-1">
             <Info size={16} />
             These settings personalize your dashboard and budgets.
-          </AlertDescription>
+          </CardDescription>
         </div>
       </CardAction>
     </form>
