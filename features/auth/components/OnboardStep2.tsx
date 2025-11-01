@@ -73,9 +73,9 @@ export default function OnboardStep2() {
             Add templates
           </Button>
         </div>
-        <div className="flex justify-center items-center gap-1 mt-4">
+        <div className="text-muted-foreground text-xs mt-4">
           Prefer to start clean? You can configure templates later in{" "}
-          <span className="text-brand-500 text-semibold">Templates</span>
+          <span className="text-brand-500 font-semibold">Templates</span>
         </div>
       </CardAction>
     </form>
