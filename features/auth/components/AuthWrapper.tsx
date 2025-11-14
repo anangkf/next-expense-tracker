@@ -46,9 +46,9 @@ export default function AuthWrapper({
 }: Readonly<AuthWrapperProps>) {
   return (
     <div className="flex justify-center w-full p-6">
-      <div className="flex flex-col lg:flex-row justify-center w-full max-w-5xl gap-6">
+      <div className="flex flex-col lg:flex-row justify-center items-center lg:items-start w-full min-h-[90vh] max-w-5xl gap-6">
         {/* BANNER */}
-        <Card className="w-full lg:w-7/12 bg-brand-50/50 backdrop-blur-md h-fit">
+        <Card className="w-full lg:w-7/12 hidden lg:block bg-brand-50/50 backdrop-blur-md h-fit">
           {bannerTitle && (
             <CardHeader>
               <h4 className="flex items-center gap-2 text-brand-600">
@@ -67,7 +67,7 @@ export default function AuthWrapper({
               />
             </AspectRatio>
           </CardContent>
-          <CardFooter className="flex flex-col w-full gap-4">
+          <CardFooter className="flex flex-col w-full gap-4 mt-4">
             {bannerAlerts?.map((alert) => (
               <Alert key={alert.title}>
                 {alert.icon}
