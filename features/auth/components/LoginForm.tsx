@@ -8,8 +8,6 @@ import { Label } from "@components/ui/label";
 import { Clock, LoaderCircle, ShieldCheck, UserRoundPlus } from "lucide-react";
 import Link from "next/link";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
-import { setCookie } from "../utils/setCookie";
-import constant from "@/lib/constant";
 import { toast } from "sonner";
 import { useLogin } from "../services/useLogin";
 import { LoginFormValues, LoginPayload } from "../types/login";
@@ -37,19 +35,7 @@ export default function LoginForm() {
 
   const onSubmit: SubmitHandler<LoginPayload> = async (data) => {
     mutate(data, {
-      onSuccess: (data) => {
-        const { token, refresh_token } = data;
-        setCookie(
-          constant.TOKEN_KEYNAME as string,
-          token,
-          constant.EXPIRE_DAYS
-        );
-        setCookie(
-          constant.REFRESH_TOKEN_KEYNAME as string,
-          refresh_token,
-          constant.EXPIRE_DAYS
-        );
-
+      onSuccess: () => {
         toast.success("Login success");
         router.push("/");
       },

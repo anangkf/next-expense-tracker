@@ -12,8 +12,6 @@ import { useRegister } from "../services/useRegister";
 import { toast } from "sonner";
 import { RegisterFormValues } from "../types/register";
 import { regexEmail, regexPassword } from "../const/regext";
-import { setCookie } from "../utils/setCookie";
-import constant from "@/lib/constant";
 
 const defaultValues = {
   email: "",
@@ -39,19 +37,7 @@ export default function RegisterForm() {
   const onSubmit: SubmitHandler<RegisterFormValues> = async (data) => {
     const { confirmPassword, ...payload } = data;
     mutate(payload, {
-      onSuccess: (data) => {
-        const { token, refresh_token } = data;
-        setCookie(
-          constant.TOKEN_KEYNAME as string,
-          token,
-          constant.EXPIRE_DAYS
-        );
-        setCookie(
-          constant.REFRESH_TOKEN_KEYNAME as string,
-          refresh_token,
-          constant.EXPIRE_DAYS
-        );
-
+      onSuccess: () => {
         toast.success("Register success");
         router.push("/onboarding?step=1");
       },
