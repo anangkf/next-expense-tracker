@@ -12,6 +12,8 @@ import { useRegister } from "../services/useRegister";
 import { toast } from "sonner";
 import { RegisterFormValues } from "../types/register";
 import { regexEmail, regexPassword } from "../const/regext";
+import { setCookie } from "../utils/setCookie";
+import constant from "@/lib/constant";
 
 const defaultValues = {
   email: "",
@@ -36,8 +38,16 @@ export default function RegisterForm() {
     mutate(data, {
       onSuccess: (data) => {
         const { token, refresh_token } = data;
-        localStorage.setItem("token", token);
-        localStorage.setItem("refresh_token", refresh_token);
+        setCookie(
+          constant.TOKEN_KEYNAME as string,
+          token,
+          constant.EXPIRE_DAYS
+        );
+        setCookie(
+          constant.REFRESH_TOKEN_KEYNAME as string,
+          refresh_token,
+          constant.EXPIRE_DAYS
+        );
 
         toast.success("Register success");
         router.push("/onboarding?step=1");
