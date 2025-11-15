@@ -106,6 +106,7 @@ export default function OnboardStep1() {
             type="button"
             variant={"outline-brand"}
             className="w-1/2 md:w-1/3 text-left"
+            onClick={() => router.push("/")}
           >
             <SkipForward />
             Skip for now
