@@ -19,6 +19,7 @@ const defaultValues = {
   email: "",
   name: "",
   password: "",
+  confirmPassword: "",
 };
 
 export default function RegisterForm() {
@@ -27,6 +28,7 @@ export default function RegisterForm() {
     control,
     handleSubmit,
     formState: { errors },
+    watch,
   } = useForm<RegisterFormValues>({
     defaultValues,
     mode: "onChange",
@@ -35,7 +37,8 @@ export default function RegisterForm() {
   const { isPending, mutate } = useRegister();
 
   const onSubmit: SubmitHandler<RegisterFormValues> = async (data) => {
-    mutate(data, {
+    const { confirmPassword, ...payload } = data;
+    mutate(payload, {
       onSuccess: (data) => {
         const { token, refresh_token } = data;
         setCookie(
@@ -146,6 +149,33 @@ export default function RegisterForm() {
         />
         {errors.password && (
           <p className="text-error-500 text-sm">{errors.password.message}</p>
+        )}
+      </div>
+      <div className="grid w-full items-center">
+        <Label htmlFor="password" className="mb-2 mt-4">
+          Confirm Password
+        </Label>
+        <Controller
+          name="confirmPassword"
+          control={control}
+          rules={{
+            required: "Confirm password is required.",
+            validate: (value) =>
+              value === watch("password") || "Passwords doesn't match",
+          }}
+          render={({ field }) => (
+            <Input
+              id="confirmPassword"
+              type="password"
+              placeholder="Enter your confirm password"
+              {...field}
+            />
+          )}
+        />
+        {errors.confirmPassword && (
+          <p className="text-error-500 text-sm">
+            {errors.confirmPassword.message}
+          </p>
         )}
       </div>
       <CardAction className="mt-4 w-full">

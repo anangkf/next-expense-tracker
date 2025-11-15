@@ -6,4 +6,7 @@ import {
 
 export type LoginPayload = Omit<RegisterPayload, "name">;
 export type LoginResponse = Omit<RegisterResponse, "user">;
-export type LoginFormValues = Omit<RegisterFormValues, "name">;
+export type LoginFormValues = Omit<
+  RegisterFormValues,
+  "name" | "confirmPassword"
+>;
