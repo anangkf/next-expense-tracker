@@ -1,5 +1,6 @@
 "use client";
 
+import { SidebarProvider } from "@/components/ui/sidebar";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import React from "react";
@@ -20,7 +21,15 @@ export default function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {children}
+      <SidebarProvider
+        style={
+          {
+            "--sidebar-width": "19rem",
+          } as React.CSSProperties
+        }
+      >
+        {children}
+      </SidebarProvider>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );
