@@ -13,31 +13,44 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { useLogout } from "@/services/shared/useLogout";
-import { LoaderCircle, LogOut } from "lucide-react";
+import {
+  ClipboardList,
+  Gauge,
+  LoaderCircle,
+  LogOut,
+  Receipt,
+  Shapes,
+  User,
+} from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { Button } from "./ui/button";
-import Logo from "./ui/logo";
+import { Button } from "../ui/button";
+import Logo from "../ui/logo";
 
 const navs = [
   {
     title: "Dashboard",
+    icon: <Gauge />,
     url: "/dashboard",
   },
   {
     title: "Expenses",
+    icon: <Receipt />,
     url: "#",
   },
   {
     title: "Categories",
+    icon: <Shapes />,
     url: "#",
   },
   {
     title: "Templates",
+    icon: <ClipboardList />,
     url: "#",
   },
   {
     title: "Profile",
+    icon: <User />,
     url: "#",
   },
 ];
@@ -81,6 +94,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               <SidebarMenuItem key={item.title}>
                 <SidebarMenuButton asChild isActive={path === item.url}>
                   <a href={item.url} className="font-medium">
+                    {item.icon}
                     {item.title}
                   </a>
                 </SidebarMenuButton>
