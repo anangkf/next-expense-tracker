@@ -1,4 +1,5 @@
 import CategorySplit from "@/features/dashboard/components/CategorySplit";
+import RecentTransactions from "@/features/dashboard/components/RecentTransactions";
 import SpendingOverview from "@/features/dashboard/components/SpendingOverview";
 
 export default function Page() {
@@ -7,8 +8,9 @@ export default function Page() {
       <div className="lg:col-span-2 border border-brand-500">search</div>
       <SpendingOverview />
       <CategorySplit />
-      <div className="border border-brand-500">Item 3</div>
-      <div className="border border-brand-500">Item 4</div>
+      <div className="lg:col-span-2">
+        <RecentTransactions />
+      </div>
     </div>
   );
 }
