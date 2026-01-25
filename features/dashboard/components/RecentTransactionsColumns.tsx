@@ -1,17 +1,9 @@
 "use client";
 
 import { DataTableColumnHeader } from "@/components/ui/data-table-column-header";
+import { Category } from "@/features/categories/types";
 import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
-
-export type Category = {
-  id: number;
-  name: string;
-  type: "expense" | "income";
-  is_default: boolean;
-  created_at: string;
-  updated_at: string;
-};
 
 export type Transaction = {
   id: number;

@@ -6,70 +6,46 @@ import Combobox from "@/components/ui/combobox";
 import { Label } from "@/components/ui/label";
 import { Toggle } from "@/components/ui/toggle";
 import { currencies } from "@/lib/currencies";
-import {
-  ArrowRight,
-  CircleEllipsis,
-  Coffee,
-  House,
-  Info,
-  ShoppingBag,
-  SkipForward,
-  Sparkles,
-  TramFront,
-  Tv,
-  Zap,
-} from "lucide-react";
+import { ArrowRight, Info, SkipForward, Sparkles } from "lucide-react";
+import { DynamicIcon } from "lucide-react/dynamic";
 import { useRouter } from "next/navigation";
-
-const baseCategories = [
-  {
-    id: 1,
-    name: "Groceries",
-    icon: <ShoppingBag />,
-  },
-  {
-    id: 2,
-    name: "Transport",
-    icon: <TramFront />,
-  },
-  {
-    id: 3,
-    name: "Rent",
-    icon: <House />,
-  },
-  {
-    id: 4,
-    name: "Utilities",
-    icon: <Zap />,
-  },
-  {
-    id: 5,
-    name: "Dining",
-    icon: <Coffee />,
-  },
-  {
-    id: 6,
-    name: "Subscriptions",
-    icon: <Tv />,
-  },
-  {
-    id: 7,
-    name: "Other",
-    icon: <CircleEllipsis />,
-  },
-];
+import { Skeleton } from "@/components/ui/skeleton";
+import { useGetDefaultCategories } from "@/features/categories/services/useCategories";
+import { Category, CategoryRequest } from "@/features/categories/types";
+import {
+  useOnboardingDispatch,
+  useOnboardingState,
+} from "../context/OnboardingContext";
 
 const currencyOptions = currencies.map((currency) => ({
   label: `${currency.symbol} - ${currency.code}`,
   value: currency.code,
 }));
 
+const transformCategory = (category: Category): CategoryRequest => ({
+  name: category.name,
+  type: category.type,
+  bucket_type_id: category.bucket_type_id,
+  icon_name: category.icon_name,
+});
+
 export default function OnboardStep1() {
   const router = useRouter();
+  const dispatch = useOnboardingDispatch();
+  const { categories, currency } = useOnboardingState();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  // SERVICES
+  const { data: defaultCategories, isPending: isLoadingCategories } =
+    useGetDefaultCategories();
+
+  const toggleCategory = (category: Category) => {
+    const categoryRequest = transformCategory(category);
+
+    dispatch({ type: "TOGGLE_CATEGORY", payload: categoryRequest });
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     router.push("/onboarding?step=2");
   };
 
@@ -83,21 +59,31 @@ export default function OnboardStep1() {
           options={currencyOptions}
           className="w-full"
           contentAlign="start"
+          value={currency}
+          handleSelect={(value) =>
+            dispatch({ type: "SET_CURRENCY", payload: value })
+          }
         />
       </div>
       <div className="grid w-full items-center">
         <Label className="mb-2 mt-4">Quick Categories (suggested)</Label>
         <div className="flex flex-wrap gap-4 mt-2">
-          {baseCategories.map((category) => (
-            <Toggle
-              key={category.id}
-              variant="outline"
-              aria-label={category.name}
-            >
-              {category.icon}
-              <span>{category.name}</span>
-            </Toggle>
-          ))}
+          {isLoadingCategories
+            ? Array.from({ length: 8 }).map((_, idx) => (
+                <Skeleton key={idx} className="w-32 h-8" />
+              ))
+            : defaultCategories?.map((category) => (
+                <Toggle
+                  key={category.id}
+                  variant="outline"
+                  aria-label={category.name}
+                  onClick={() => toggleCategory(category)}
+                  pressed={categories.some((c) => c.name === category.name)}
+                >
+                  <DynamicIcon name={category.icon_name as any} />
+                  <span>{category.name}</span>
+                </Toggle>
+              ))}
         </div>
       </div>
       <CardAction className="mt-4 w-full">
@@ -111,7 +97,11 @@ export default function OnboardStep1() {
             <SkipForward />
             Skip for now
           </Button>
-          <Button type="submit" className="w-1/2 md:w-2/3 text-left">
+          <Button
+            type="submit"
+            disabled={isLoadingCategories}
+            className="w-1/2 md:w-2/3 text-left"
+          >
             <ArrowRight />
             Continue
           </Button>

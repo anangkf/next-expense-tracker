@@ -3,52 +3,37 @@
 import { Button } from "@/components/ui/button";
 import { CardAction } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Toggle } from "@/components/ui/toggle";
-import {
-  Bus,
-  Check,
-  CreditCard,
-  Flame,
-  ParkingMeter,
-  Wifi,
-  X,
-} from "lucide-react";
+import { useGetDefaultTemplates } from "@/features/templates/services/useTemplates";
+import { Template } from "@/features/templates/types";
+import { Check, X } from "lucide-react";
+import { DynamicIcon } from "lucide-react/dynamic";
 import { useRouter } from "next/navigation";
-
-const baseTemplates = [
-  {
-    id: 1,
-    name: "Commute (Daily)",
-    icon: <Bus />,
-  },
-  {
-    id: 2,
-    name: "Credit Card Bill",
-    icon: <CreditCard />,
-  },
-  {
-    id: 3,
-    name: "Internet",
-    icon: <Wifi />,
-  },
-  {
-    id: 4,
-    name: "Utilities: Gas",
-    icon: <Flame />,
-  },
-  {
-    id: 5,
-    name: "Parking",
-    icon: <ParkingMeter />,
-  },
-];
+import {
+  useOnboardingDispatch,
+  useOnboardingState,
+} from "../context/OnboardingContext";
 
 export default function OnboardStep2() {
   const router = useRouter();
+  const dispatch = useOnboardingDispatch();
+  const { templates } = useOnboardingState();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  // SERVICES
+  const { data: defaultTemplates, isPending: isLoadingTemplates } =
+    useGetDefaultTemplates();
+
+  const toggleTemplates = (template: Template) => {
+    const { name, amount, category, icon_name } = template;
+    dispatch({
+      type: "TOGGLE_TEMPLATE",
+      payload: { name, amount, category_id: category.id, icon_name },
+    });
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     router.push("/onboarding?step=3");
   };
 
@@ -57,16 +42,27 @@ export default function OnboardStep2() {
       <div className="grid w-full items-center">
         <Label className="mb-2 mt-4">Recommended templates</Label>
         <div className="flex flex-wrap gap-4 mt-2">
-          {baseTemplates.map((template) => (
-            <Toggle
-              key={template.id}
-              variant="outline"
-              aria-label={template.name}
-            >
-              {template.icon}
-              <span>{template.name}</span>
-            </Toggle>
-          ))}
+          {isLoadingTemplates
+            ? Array.from({ length: 8 }).map((_, idx) => (
+                <Skeleton key={idx} className="w-32 h-8" />
+              ))
+            : defaultTemplates?.map((template) => (
+                <Toggle
+                  key={template.id}
+                  variant="outline"
+                  aria-label={template.name}
+                  onClick={() => {
+                    toggleTemplates(template);
+                  }}
+                  pressed={templates.some((t) => t.name === template.name)}
+                >
+                  <DynamicIcon
+                    name={template.icon_name as any}
+                    className="w-32 h-8"
+                  />
+                  <span>{template.name}</span>
+                </Toggle>
+              ))}
         </div>
       </div>
       <CardAction className="mt-4 w-full">
@@ -75,11 +71,16 @@ export default function OnboardStep2() {
             type="button"
             variant={"outline-brand"}
             className="w-1/2 md:w-1/3 text-left"
+            onClick={() => router.push("/onboarding?step=3")}
           >
             <X />
             No, thanks
           </Button>
-          <Button type="submit" className="w-1/2 md:w-2/3 text-left">
+          <Button
+            type="submit"
+            className="w-1/2 md:w-2/3 text-left"
+            disabled={isLoadingTemplates}
+          >
             <Check />
             Add templates
           </Button>
