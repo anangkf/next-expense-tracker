@@ -5,11 +5,16 @@ import { Category } from "@/features/categories/types";
 import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
 
+type DummyCategory = Omit<
+  Category,
+  "total_expense" | "icon_name" | "bucket_type_id"
+>;
+
 export type Transaction = {
   id: number;
   name: string;
   amount: number;
-  category: Category;
+  category: DummyCategory;
   created_at: string;
   updated_at: string;
   deleted_at: string;
