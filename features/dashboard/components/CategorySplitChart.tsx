@@ -6,43 +6,30 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { Pie, PieChart } from "recharts";
+import { Cell, Pie, PieChart } from "recharts";
 
-type SpendingByCategory = {
+export type SpendingByCategory = {
   id: number;
   name: string;
-  value: number;
-  fill: string;
+  total_expense: number;
+  color: string;
 };
-
-const chartConfig = {
-  food: {
-    label: "Food",
-    color: "var(--chart-1)",
-  },
-  transportation: {
-    label: "Transportation",
-    color: "var(--chart-2)",
-  },
-  entertainment: {
-    label: "Entertainment",
-    color: "var(--chart-3)",
-  },
-  healthWellness: {
-    label: "Health & Wellness",
-    color: "var(--chart-4)",
-  },
-  other: {
-    label: "Other",
-    color: "var(--chart-5)",
-  },
-} satisfies ChartConfig;
 
 export default function CategorySplitChart({
   spendingByCategory,
 }: Readonly<{
   spendingByCategory: SpendingByCategory[];
 }>) {
+  const chartConfig = spendingByCategory?.reduce(
+    (_, { name, color }) => ({
+      [name.toLowerCase()]: {
+        label: name,
+        color,
+      },
+    }),
+    {} as ChartConfig,
+  );
+
   return (
     <ChartContainer
       config={chartConfig}
@@ -55,10 +42,14 @@ export default function CategorySplitChart({
         />
         <Pie
           data={spendingByCategory}
-          dataKey="value"
+          dataKey="total_expense"
           nameKey="name"
           innerRadius={60}
-        />
+        >
+          {spendingByCategory?.map((entry) => (
+            <Cell key={entry.id} fill={entry.color} name={entry.name} />
+          ))}
+        </Pie>
       </PieChart>
     </ChartContainer>
   );

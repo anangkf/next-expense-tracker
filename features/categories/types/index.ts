@@ -4,6 +4,7 @@ export interface Category {
   type: "expense" | "income";
   is_default: boolean;
   bucket_type_id: number;
+  total_expense: number;
   icon_name: string;
   created_at: string;
   updated_at: string;

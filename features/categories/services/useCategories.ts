@@ -3,6 +3,7 @@ import { ResponseWithPagination, SuccessResponse } from "@/types/common";
 import { PREFIX } from "@/types/prefix";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Category, CategoryRequest } from "../types";
+import { buildQueryParams, QueryParams } from "@/lib/buildQueryParams";
 
 export const useGetDefaultCategories = () => {
   return useQuery({
@@ -37,15 +38,15 @@ export const useCreateMultipleCategories = (categories: CategoryRequest[]) => {
   });
 };
 
-export const useGetCategories = () => {
+export const useGetCategories = (params: QueryParams) => {
+  const queryParams = buildQueryParams(params);
   return useQuery({
-    queryKey: [PREFIX.GET, PREFIX.CATEGORIES],
+    queryKey: [PREFIX.GET, PREFIX.CATEGORIES, queryParams],
     queryFn: async () => {
       try {
-        const response =
-          await api.get<SuccessResponse<ResponseWithPagination<Category[]>>>(
-            "/categories",
-          );
+        const response = await api.get<
+          SuccessResponse<ResponseWithPagination<Category[]>>
+        >(`/categories?${queryParams}`);
         return response.data.data.data;
       } catch (error: any) {
         throw error?.response?.data;
