@@ -21,6 +21,7 @@ interface ComboboxProps extends ButtonProps {
   searchPlaceholder?: string;
   labelNoOptions?: string;
   contentAlign?: "start" | "center" | "end";
+  handleSelect?: (value: string) => void;
 }
 
 export default function Combobox(props: Readonly<ComboboxProps>) {
@@ -31,6 +32,7 @@ export default function Combobox(props: Readonly<ComboboxProps>) {
     labelNoOptions = "No option found.",
     contentAlign,
     className,
+    handleSelect = () => {},
   } = props;
 
   const [open, setOpen] = useState(false);
@@ -67,13 +69,14 @@ export default function Combobox(props: Readonly<ComboboxProps>) {
                   onSelect={(currentValue) => {
                     setValue(currentValue === value ? "" : currentValue);
                     setOpen(false);
+                    handleSelect?.(currentValue);
                   }}
                 >
                   {option.label}
                   <Check
                     className={cn(
                       "ml-auto",
-                      value === option.value ? "opacity-100" : "opacity-0"
+                      value === option.value ? "opacity-100" : "opacity-0",
                     )}
                   />
                 </CommandItem>

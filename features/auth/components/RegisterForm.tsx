@@ -43,7 +43,7 @@ export default function RegisterForm() {
       },
       onError: (error: any) => {
         toast.error("Register failed", {
-          description: `${error?.message}: ${error?.error}`,
+          description: `Error: ${error?.message}`,
         });
       },
     });

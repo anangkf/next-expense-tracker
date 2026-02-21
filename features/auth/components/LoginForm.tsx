@@ -11,7 +11,7 @@ import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { useLogin } from "../services/useLogin";
 import { LoginFormValues, LoginPayload } from "../types/login";
-import { regexEmail, regexPassword } from "../const/regext";
+import { regexEmail } from "../const/regext";
 import { useRouter } from "next/navigation";
 
 const defaultValues = {
@@ -41,7 +41,7 @@ export default function LoginForm() {
       },
       onError: (error: any) => {
         toast.error("Login failed", {
-          description: `${error?.message}: ${error?.error}`,
+          description: `Error: ${error?.message}`,
         });
       },
     });
@@ -88,11 +88,6 @@ export default function LoginForm() {
             minLength: {
               value: 8,
               message: "Password must be at least 8 characters long.",
-            },
-            pattern: {
-              value: regexPassword,
-              message:
-                "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.",
             },
           }}
           render={({ field }) => (

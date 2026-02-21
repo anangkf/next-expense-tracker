@@ -45,7 +45,7 @@ const steps = [
     },
     title: "Set your preferences",
     description: "We'll prefill your workspace for a smoother start",
-    form: <OnboardStep1 />,
+    form: OnboardStep1,
   },
   {
     id: "onboard2",
@@ -73,7 +73,7 @@ const steps = [
     },
     title: "Import starter templatesSet your preferences",
     description: "We'll add a few templates so you can log expenses faster",
-    form: <OnboardStep2 />,
+    form: OnboardStep2,
   },
   {
     id: "onboardFinal",
@@ -102,7 +102,7 @@ const steps = [
     title: "All set. Jump into your dashboard",
     description:
       "Your workspace is ready with preferences, categories and starter templates",
-    form: <OnboardFinal />,
+    form: OnboardFinal,
   },
 ];
 
@@ -112,6 +112,7 @@ export default function OnboardStepper() {
 
   const currentStep =
     steps.find((s) => s.stepper.currentStep === Number(step)) || steps[0];
+  const FormComponent = currentStep?.form;
 
   return (
     <AuthWrapper
@@ -122,7 +123,7 @@ export default function OnboardStepper() {
       stepper={currentStep?.stepper}
       title={currentStep?.title}
       description={currentStep?.description}
-      form={currentStep?.form}
+      form={<FormComponent />}
     />
   );
 }

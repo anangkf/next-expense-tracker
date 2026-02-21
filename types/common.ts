@@ -12,3 +12,11 @@ export interface ErrorResponse extends BaseResponse {
   success: false;
   error: string;
 }
+
+export type ResponseWithPagination<T> = {
+  data: T;
+  limit: number;
+  page: number;
+  total: number;
+  total_pages: number;
+};

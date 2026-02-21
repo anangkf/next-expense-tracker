@@ -27,7 +27,7 @@ const overviewData = [
 
 export default function SpendingOverview() {
   return (
-    <Card className="gap-2 p-2">
+    <Card className="gap-2 p-2 h-fit">
       <CardHeader className="p-0">
         <CardTitle className="text-lg">Overview</CardTitle>
       </CardHeader>

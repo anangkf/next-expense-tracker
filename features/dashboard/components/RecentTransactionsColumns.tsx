@@ -1,23 +1,20 @@
 "use client";
 
 import { DataTableColumnHeader } from "@/components/ui/data-table-column-header";
+import { Category } from "@/features/categories/types";
 import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
 
-export type Category = {
-  id: number;
-  name: string;
-  type: "expense" | "income";
-  is_default: boolean;
-  created_at: string;
-  updated_at: string;
-};
+type DummyCategory = Omit<
+  Category,
+  "total_expense" | "icon_name" | "bucket_type_id"
+>;
 
 export type Transaction = {
   id: number;
   name: string;
   amount: number;
-  category: Category;
+  category: DummyCategory;
   created_at: string;
   updated_at: string;
   deleted_at: string;
