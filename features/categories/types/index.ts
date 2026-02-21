@@ -12,5 +12,5 @@ export interface Category {
 
 export type CategoryRequest = Omit<
   Category,
-  "id" | "is_default" | "created_at" | "updated_at"
+  "id" | "is_default" | "created_at" | "updated_at" | "total_expense"
 >;
