@@ -2,8 +2,30 @@
 
 import { DataTableColumnHeader } from "@/components/ui/data-table-column-header";
 import { Category } from "@/features/categories/types";
+import { Expense } from "@/features/expenses/services/useExpenses";
+import { formatCurrency } from "@/lib/formatCurrency";
 import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
+import React from "react";
+
+const highlight = (text: string, highlight: string) => {
+  if (!highlight) return text;
+  const regex = new RegExp(`(${highlight})`, "gi");
+  const parts = text.split(regex);
+  return (
+    <span>
+      {parts.map((part, i) =>
+        regex.test(part) ? (
+          <mark key={i} className="bg-yellow-200 px-0 rounded">
+            {part}
+          </mark>
+        ) : (
+          <React.Fragment key={i}>{part}</React.Fragment>
+        ),
+      )}
+    </span>
+  );
+};
 
 type DummyCategory = Omit<
   Category,
@@ -20,12 +42,17 @@ export type Transaction = {
   deleted_at: string;
 };
 
-const columns: ColumnDef<Transaction>[] = [
+const columns: ColumnDef<Expense>[] = [
   {
     accessorKey: "name",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Name" />
     ),
+    cell: ({ row, table }) => {
+      const name = row.getValue("name") as string;
+      const filterValue = table.options.meta?.filterValue;
+      return highlight(name, filterValue || "");
+    },
   },
   {
     accessorKey: "category.name",
@@ -38,6 +65,15 @@ const columns: ColumnDef<Transaction>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Amount" />
     ),
+    cell: ({ row }) => {
+      const amount = row.getValue("amount") as number;
+      const formatted = formatCurrency({
+        value: amount,
+        currency: "IDR",
+        decimal: 0,
+      });
+      return <div>{formatted}</div>;
+    },
   },
   {
     accessorKey: "created_at",
