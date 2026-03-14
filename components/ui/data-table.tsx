@@ -8,6 +8,9 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
+  OnChangeFn,
+  PaginationState,
+  RowData,
   SortingState,
   useReactTable,
   VisibilityState,
@@ -30,20 +33,61 @@ import {
   DropdownMenuTrigger,
 } from "@components/ui/dropdown-menu";
 import { DataTablePagination } from "./data-table-pagination";
+import { useDebouncedCallback } from "use-debounce";
+import { Spinner } from "./spinner";
+
+declare module "@tanstack/react-table" {
+  interface TableMeta<TData extends RowData> {
+    filterValue?: string;
+  }
+}
+
+export type Pagination = {
+  page: number;
+  limit: number;
+  total: number;
+  total_pages: number;
+};
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  pagination: Pagination;
+  defaultSorting?: SortingState;
+  handleFilter?: (value: string) => void;
+  defaultFilter?: string;
+  handlePaginationChange?: (state: PaginationState) => void;
+  loading?: boolean;
 }
 
 export default function DataTable<TData, TValue>({
   columns,
   data,
+  pagination,
+  defaultSorting = [],
+  handleFilter = (value: string) => {},
+  defaultFilter = "name",
+  handlePaginationChange,
+  loading = false,
 }: DataTableProps<TData, TValue>) {
-  const [sorting, setSorting] = useState<SortingState>([]);
+  const [paginationState, setPaginationState] = useState({
+    pageIndex: pagination?.page - 1 || 0,
+    pageSize: pagination?.limit || 10,
+  });
+  const [sorting, setSorting] = useState<SortingState>(defaultSorting);
+  const [filterInput, setFilterInput] = useState("");
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
+
+  const onPaginationChange: OnChangeFn<PaginationState> = (updater) => {
+    const newPagination =
+      typeof updater === "function" ? updater(paginationState) : updater;
+
+    setPaginationState(newPagination);
+
+    handlePaginationChange?.(newPagination);
+  };
 
   const table = useReactTable({
     data,
@@ -56,24 +100,41 @@ export default function DataTable<TData, TValue>({
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
+    meta: {
+      filterValue: filterInput,
+    },
     state: {
       sorting,
       columnFilters,
       columnVisibility,
       rowSelection,
+      pagination: paginationState,
     },
+    manualPagination: true,
+    onPaginationChange,
+    pageCount: pagination?.total_pages,
+    rowCount: pagination?.total,
+    manualFiltering: true,
   });
+
+  const debouncedHandleFilter = useDebouncedCallback((value: string) => {
+    if (handleFilter) {
+      handleFilter(value);
+    }
+    table.setPageIndex(0);
+  }, 200);
 
   return (
     <div className="flex flex-col gap-2">
       {/* FILTERS */}
       <div className="flex items-center py-4">
         <Input
-          placeholder="Filter name..."
-          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("name")?.setFilterValue(event.target.value)
-          }
+          placeholder={`Filter ${defaultFilter}...`}
+          value={filterInput}
+          onChange={(event) => {
+            setFilterInput(event.target.value);
+            debouncedHandleFilter(event.target.value);
+          }}
           className="max-w-sm"
         />
 
@@ -119,7 +180,7 @@ export default function DataTable<TData, TValue>({
                         ? null
                         : flexRender(
                             header.column.columnDef.header,
-                            header.getContext()
+                            header.getContext(),
                           )}
                     </TableHead>
                   );
@@ -128,7 +189,13 @@ export default function DataTable<TData, TValue>({
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows?.length ? (
+            {loading ? (
+              <TableRow className="w-full">
+                <TableCell colSpan={columns.length} className="h-24">
+                  <Spinner className="size-6 mx-auto" />
+                </TableCell>
+              </TableRow>
+            ) : table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
@@ -138,7 +205,7 @@ export default function DataTable<TData, TValue>({
                     <TableCell key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext()
+                        cell.getContext(),
                       )}
                     </TableCell>
                   ))}

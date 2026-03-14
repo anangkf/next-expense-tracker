@@ -1,3 +1,5 @@
+type CategoryType = "expense" | "income";
+
 export type QueryParams = {
   page?: number;
   limit?: number;
@@ -5,6 +7,8 @@ export type QueryParams = {
   order?: "asc" | "desc";
   name?: string;
   type?: string;
+  category_name?: string;
+  category_type?: CategoryType;
   withTotal?: boolean;
   start_date?: string;
   end_date?: string;
