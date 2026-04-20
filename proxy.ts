@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import constant from "./lib/constant";
 
 export function proxy(request: NextRequest) {
-  const token = request.cookies.get("token")?.value;
+  const token = request.cookies.get(constant.TOKEN_KEYNAME)?.value;
   const { pathname } = request.nextUrl;
 
   const publicPaths = ["/login", "/register"];
