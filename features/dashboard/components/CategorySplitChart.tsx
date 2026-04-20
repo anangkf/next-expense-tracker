@@ -34,6 +34,7 @@ export default function CategorySplitChart({
     <ChartContainer
       config={chartConfig}
       className="mx-auto aspect-square max-h-[250px]"
+      id="category-split"
     >
       <PieChart>
         <ChartTooltip

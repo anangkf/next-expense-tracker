@@ -27,6 +27,7 @@ export default function SpendingChart({ data }: SpendingChartProps) {
       <ChartContainer
         config={chartConfig}
         className="aspect-auto h-full w-full"
+        id="spending"
       >
         <LineChart
           accessibilityLayer
