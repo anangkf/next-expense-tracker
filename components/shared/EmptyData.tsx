@@ -17,6 +17,7 @@ type EmptyDataProps = {
   buttonLabel?: string;
   buttonVariant?: ButtonProps["variant"];
   buttonAction?: () => void;
+  buttonComponent?: React.ReactNode
 };
 
 export default function EmptyData({
@@ -26,7 +27,8 @@ export default function EmptyData({
   description,
   buttonLabel,
   buttonVariant = "default",
-  buttonAction = () => {},
+  buttonAction = () => { },
+  buttonComponent
 }: EmptyDataProps) {
   return (
     <Empty className={className}>
@@ -36,9 +38,9 @@ export default function EmptyData({
         {description && <EmptyDescription>{description}</EmptyDescription>}
       </EmptyHeader>
       <EmptyContent className="flex-row justify-center gap-2">
-        <Button variant={buttonVariant} onClick={buttonAction}>
+        {buttonComponent || <Button variant={buttonVariant} onClick={buttonAction}>
           {buttonLabel ?? "Create Data"}
-        </Button>
+        </Button>}
       </EmptyContent>
     </Empty>
   );

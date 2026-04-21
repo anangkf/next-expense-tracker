@@ -25,6 +25,8 @@ import { useState } from "react";
 import CategoryChartSkeleton from "./CategoryChartSkeleton";
 import EmptyData from "@/components/shared/EmptyData";
 import ListWrapperWithToggle from "@/components/shared/ListWrapperWithToggle";
+import DrawerCreateTransaction from "@/features/expenses/components/DrawerCreateTransaction";
+import { Button } from "@/components/ui/button";
 const today = new Date();
 export const INITIAL_DATE_RANGE = {
   from: startOfMonth(today),
@@ -108,6 +110,7 @@ const CategoryChartContent = ({
         title="No Expense Data"
         description="No expenses yet for this period! Begin by logging your first expense."
         buttonLabel="Create Expense"
+        buttonComponent={<DrawerCreateTransaction buttonTrigger={<Button>Add Expense</Button>} />}
       />
     );
   }

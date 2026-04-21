@@ -7,7 +7,6 @@ import {
   DrawerClose,
   DrawerContent,
   DrawerDescription,
-  DrawerFooter,
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
@@ -18,30 +17,61 @@ import { useGetCategories } from "@/features/categories/services/useCategories";
 import { useDeviceType } from "@/hooks/use-device-type";
 import { Plus, X } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
+import { useCreateExpense } from "../services/useExpenses";
+import { toast } from "sonner";
+import { Spinner } from "@/components/ui/spinner";
+import { ChangeEvent, useRef } from "react";
 
 const snapPoints = ["148px", "355px", 1];
+const defaultValues = {
+  name: "",
+  amount: 0,
+  category_id: "", //category_id
+}
 
-export default function DrawerCreateTransaction() {
+type DrawerCreateTransactionProps = {
+  buttonLabel?: string;
+  buttonTrigger?: React.ReactNode;
+}
+
+export default function DrawerCreateTransaction({ buttonLabel = "Add Transaction", buttonTrigger }: DrawerCreateTransactionProps) {
   const { desktop } = useDeviceType();
+  const btnCloseRef = useRef<HTMLButtonElement | null>(null)
+
   const {
     control,
     formState: { errors },
+    handleSubmit,
+    watch,
+    reset
   } = useForm({
-    defaultValues: {
-      name: "",
-      amount: 0,
-      category: "", //category_id
-    },
+    defaultValues,
     mode: "onChange",
   });
+  const { category_id } = watch()
 
-  const { data: categories } = useGetCategories({});
+  const { data: categories, isLoading: loadingCategories } = useGetCategories({});
+  const { mutateAsync: createExpense, error, isPending: loadingExpense } = useCreateExpense(watch())
 
   const categoryOptions =
     categories?.map((category) => ({
       label: category.name,
       value: String(category.id),
     })) || [];
+
+  const onSubmit = async (data: typeof defaultValues) => {
+    try {
+      await createExpense()
+      toast.success("Success created new transaction")
+      btnCloseRef.current?.click()
+      reset()
+    } catch (error: any) {
+      console.log(error)
+      toast.error("Failed to create transaction", {
+        description: `Error: ${error?.message || "Unexpected Error"} `,
+      })
+    }
+  }
 
   return (
     <Drawer
@@ -50,12 +80,12 @@ export default function DrawerCreateTransaction() {
       {...((!desktop && snapPoints) || undefined)}
     >
       <DrawerTrigger asChild>
-        <Button className="capitalize">
+        {buttonTrigger || <Button className="capitalize">
           <Plus />
-          Add Transaction
-        </Button>
+          {buttonLabel}
+        </Button>}
       </DrawerTrigger>
-      <DrawerContent className="data-[vaul-drawer-direction=bottom]:max-h-[80vh] data-[vaul-drawer-direction=top]:max-h-[80vh]">
+      <DrawerContent className="data-[vaul-drawer-direction=bottom]:max-h-[80vh] data-[vaul-drawer-direction=right]:h-[100vh]">
         <DrawerHeader>
           <DrawerClose className="absolute right-4 top-4 cursor-pointer">
             <X />
@@ -63,120 +93,97 @@ export default function DrawerCreateTransaction() {
           <DrawerTitle>Add Transaction</DrawerTitle>
           <DrawerDescription>Add a new transaction.</DrawerDescription>
         </DrawerHeader>
-        <div className="no-scrollbar overflow-auto px-4">
-          <form onSubmit={() => {}} className="py-2">
-            <div className="grid w-full items-center">
-              <Label htmlFor="name" className="mb-2 mt-4">
-                Name
-              </Label>
-              <Controller
-                name="name"
-                control={control}
-                rules={{
-                  required: "Name is required.",
-                }}
-                render={({ field }) => (
-                  <Input
-                    id="name"
-                    type="text"
-                    placeholder="Enter the name"
-                    {...field}
-                  />
-                )}
-              />
-              {errors.name && (
-                <p className="text-error-500 text-sm">{errors.name.message}</p>
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4 no-scrollbar overflow-auto px-4 py-2 mb-6">
+          <div className="grid w-full items-center">
+            <Label htmlFor="name" className="mb-2">
+              Name
+            </Label>
+            <Controller
+              name="name"
+              control={control}
+              rules={{
+                required: "Name is required.",
+              }}
+              render={({ field }) => (
+                <Input
+                  id="name"
+                  type="text"
+                  placeholder="Enter the name"
+                  {...field}
+                />
               )}
-            </div>
-            <div className="grid w-full items-center">
-              <Label htmlFor="amount" className="mb-2 mt-4">
-                Amount
-              </Label>
-              <Controller
-                name="amount"
-                control={control}
-                rules={{
-                  required: "Amount is required.",
-                  min: {
-                    value: 0,
-                    message: "Amount must be at least 0.",
-                  },
-                }}
-                render={({ field }) => (
-                  <Input
-                    id="amount"
-                    type="number"
-                    placeholder="Enter the amount"
-                    {...field}
-                  />
-                )}
-              />
-              {errors.amount && (
-                <p className="text-error-500 text-sm">
-                  {errors.amount.message}
-                </p>
+            />
+            {errors.name && (
+              <p className="text-error-500 text-sm">{errors.name.message}</p>
+            )}
+          </div>
+          <div className="grid w-full items-center">
+            <Label htmlFor="amount" className="mb-2">
+              Amount
+            </Label>
+            <Controller
+              name="amount"
+              control={control}
+              rules={{
+                required: "Amount is required.",
+                min: {
+                  value: 0,
+                  message: "Amount must be at least 0.",
+                },
+              }}
+              render={({ field }) => (
+                <Input
+                  id="amount"
+                  type="number"
+                  placeholder="Enter the amount"
+                  {...field}
+                  onChange={(event: ChangeEvent<HTMLInputElement>) => field.onChange(Number(event.target.value))}
+                />
               )}
-            </div>
-            <div className="grid w-full items-center">
-              <Label htmlFor="category" className="mb-2 mt-4">
-                Category
-              </Label>
-              <Controller
-                name="category"
-                control={control}
-                rules={{
-                  required: "Category is required.",
-                }}
-                render={({ field }) => (
-                  <Combobox
-                    options={categoryOptions}
-                    className="w-full"
-                    contentAlign="start"
-                    // value={currency}
-                    handleSelect={(value) => field.onChange(value)}
-                  />
-                )}
-              />
-              {errors.category && (
-                <p className="text-error-500 text-sm">
-                  {errors.category.message}
-                </p>
+            />
+            {errors.amount && (
+              <p className="text-error-500 text-sm">
+                {errors.amount.message}
+              </p>
+            )}
+          </div>
+          <div className="grid w-full items-center">
+            <Label htmlFor="category" className="mb-2">
+              Category
+            </Label>
+            <Controller
+              name="category_id"
+              control={control}
+              rules={{
+                required: "Category is required.",
+              }}
+              disabled={loadingCategories}
+              render={({ field }) => (
+                <Combobox
+                  options={categoryOptions}
+                  className="w-full"
+                  contentAlign="start"
+                  value={category_id}
+                  handleSelect={(value) => field.onChange(Number(value))}
+                />
               )}
-            </div>
-            {/* <CardAction className="flex flex-col gap-2 mt-4 w-full">
-        <Button type="submit" className="w-full" disabled={isPending}>
-          {isPending ? (
-            <LoaderCircle className="w-5 h-5 animate-spin" />
-          ) : (
-            <UserRoundPlus />
-          )}
-          Login
-        </Button>
-        <AlertDescription className="flex items-center gap-1">
-          <ShieldCheck size={16} />
-          Your data is encripted in transit and at rest.
-        </AlertDescription>
-        <AlertDescription className="flex items-center gap-1">
-          <Clock size={16} />
-          Session remains active for 7 days on this device.
-        </AlertDescription>
-        <div className="flex justify-center items-center gap-1">
-          <span>Don&apos;t have an account?</span>
-          <Link href="/register">
-            <Button variant="link" className="text-brand-500 p-0">
-              Create one
+            />
+            {errors.category_id && (
+              <p className="text-error-500 text-sm">
+                {errors.category_id.message}
+              </p>
+            )}
+          </div>
+          <div className="flex justify-between gap-2">
+            <Button type="submit" className="w-1/2" disabled={loadingExpense} >
+              {loadingExpense && <Spinner />}
+              Submit
             </Button>
-          </Link>
-        </div>
-      </CardAction> */}
-          </form>
-        </div>
-        <DrawerFooter>
-          <Button>Submit</Button>
-          <DrawerClose asChild>
-            <Button variant="outline">Cancel</Button>
-          </DrawerClose>
-        </DrawerFooter>
+            <DrawerClose asChild className="w-1/2">
+              <Button ref={btnCloseRef} variant="outline">Cancel</Button>
+            </DrawerClose>
+          </div>
+        </form>
       </DrawerContent>
     </Drawer>
   );

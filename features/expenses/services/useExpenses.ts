@@ -4,7 +4,7 @@ import { buildQueryParams, QueryParams } from "@/lib/buildQueryParams";
 import api from "@/lib/client/api";
 import { ResponseWithPagination, SuccessResponse } from "@/types/common";
 import { PREFIX } from "@/types/prefix";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export type Expense = {
   id: number;
@@ -15,6 +15,8 @@ export type Expense = {
   created_at: string;
   updated_at: string;
 };
+
+type ExpenseRequest = Pick<Expense, "amount" | "name"> & { category_id: string }
 
 export const useGetExpenses = (params: QueryParams) => {
   const queryParams = buildQueryParams(params);
@@ -32,3 +34,23 @@ export const useGetExpenses = (params: QueryParams) => {
     },
   });
 };
+
+export const useCreateExpense = (expense: ExpenseRequest) => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationKey: [PREFIX.POST, PREFIX.EXPENSES, expense],
+    mutationFn: async () => {
+      try {
+        const response = await api.post<SuccessResponse<Expense>>("/expenses", expense)
+        return response.data.data
+      } catch (error: any) {
+        throw error?.response?.data
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [PREFIX.EXPENSES, PREFIX.DASHBOARD_OVERVIEW, PREFIX.CATEGORIES] })
+      queryClient.refetchQueries({ queryKey: [PREFIX.EXPENSES, PREFIX.DASHBOARD_OVERVIEW, PREFIX.CATEGORIES], exact: false })
+    }
+  })
+}

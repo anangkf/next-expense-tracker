@@ -32,11 +32,15 @@ export default function Combobox(props: Readonly<ComboboxProps>) {
     labelNoOptions = "No option found.",
     contentAlign,
     className,
-    handleSelect = () => {},
+    handleSelect = () => { },
   } = props;
 
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
+
+  const valueToLabel = Object.fromEntries(
+    options.map((opt) => [opt.value, opt.label])
+  )
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -57,7 +61,12 @@ export default function Combobox(props: Readonly<ComboboxProps>) {
         className={cn("w-[200px] p-0", className)}
         align={contentAlign}
       >
-        <Command>
+        <Command
+          filter={(value, search) => {
+            const label = valueToLabel[value] ?? ""
+            return label.toLowerCase().includes(search.toLowerCase()) ? 1 : 0
+          }}
+        >
           <CommandInput placeholder={searchPlaceholder} className="h-9" />
           <CommandList>
             <CommandEmpty>{labelNoOptions}</CommandEmpty>
