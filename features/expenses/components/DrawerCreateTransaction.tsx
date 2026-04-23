@@ -20,12 +20,12 @@ import { Controller, useForm } from "react-hook-form";
 import { useCreateExpense } from "../services/useExpenses";
 import { toast } from "sonner";
 import { Spinner } from "@/components/ui/spinner";
-import { ChangeEvent, useRef } from "react";
+import { ChangeEvent, useCallback, useMemo, useRef, useState } from "react";
 
 const snapPoints = ["148px", "355px", 1];
 const defaultValues = {
   name: "",
-  amount: 0,
+  amount: "" as unknown as number,
   category_id: "", //category_id
 }
 
@@ -34,9 +34,13 @@ type DrawerCreateTransactionProps = {
   buttonTrigger?: React.ReactNode;
 }
 
-export default function DrawerCreateTransaction({ buttonLabel = "Add Transaction", buttonTrigger }: DrawerCreateTransactionProps) {
+export default function DrawerCreateTransaction({
+  buttonLabel = "Add Transaction",
+  buttonTrigger,
+}: DrawerCreateTransactionProps) {
+  const [open, setOpen] = useState(false);
+  const btnCloseRef = useRef<HTMLButtonElement | null>(null);
   const { desktop } = useDeviceType();
-  const btnCloseRef = useRef<HTMLButtonElement | null>(null)
 
   const {
     control,
@@ -48,46 +52,67 @@ export default function DrawerCreateTransaction({ buttonLabel = "Add Transaction
     defaultValues,
     mode: "onChange",
   });
-  const { category_id } = watch()
+  const formData = watch();
+  const { category_id } = formData;
 
-  const { data: categories, isLoading: loadingCategories } = useGetCategories({});
-  const { mutateAsync: createExpense, error, isPending: loadingExpense } = useCreateExpense(watch())
+  const { data: categories, isLoading: loadingCategories } = useGetCategories(
+    {},
+  );
+  const {
+    mutateAsync: createExpense,
+    error,
+    isPending: loadingExpense,
+  } = useCreateExpense(formData);
 
-  const categoryOptions =
+  const categoryOptions = useMemo(
+    () =>
     categories?.map((category) => ({
       label: category.name,
       value: String(category.id),
-    })) || [];
+      })) || [],
+    [categories],
+  );
 
-  const onSubmit = async (data: typeof defaultValues) => {
+  const onSubmit = useCallback(
+    async (data: typeof defaultValues) => {
     try {
-      await createExpense()
-      toast.success("Success created new transaction")
-      btnCloseRef.current?.click()
-      reset()
+        await createExpense();
+        toast.success("Success created new transaction");
+        btnCloseRef.current?.click();
+        reset();
     } catch (error: any) {
-      console.log(error)
+        console.log(error);
       toast.error("Failed to create transaction", {
         description: `Error: ${error?.message || "Unexpected Error"} `,
-      })
+        });
     }
-  }
+    },
+    [createExpense],
+  );
 
   return (
     <Drawer
+      open={open}
+      onOpenChange={setOpen}
       direction={desktop ? "right" : "bottom"}
-      modal={false}
+      dismissible={false}
       {...((!desktop && snapPoints) || undefined)}
     >
       <DrawerTrigger asChild>
-        {buttonTrigger || <Button className="capitalize">
+        {buttonTrigger || (
+          <Button className="capitalize">
           <Plus />
           {buttonLabel}
-        </Button>}
+          </Button>
+        )}
       </DrawerTrigger>
       <DrawerContent className="data-[vaul-drawer-direction=bottom]:max-h-[80vh] data-[vaul-drawer-direction=right]:h-[100vh]">
         <DrawerHeader>
-          <DrawerClose className="absolute right-4 top-4 cursor-pointer">
+          <DrawerClose
+            ref={btnCloseRef}
+            className="absolute right-4 top-4 cursor-pointer"
+            onClick={() => setOpen(false)}
+          >
             <X />
           </DrawerClose>
           <DrawerTitle>Add Transaction</DrawerTitle>
@@ -142,9 +167,7 @@ export default function DrawerCreateTransaction({ buttonLabel = "Add Transaction
               )}
             />
             {errors.amount && (
-              <p className="text-error-500 text-sm">
-                {errors.amount.message}
-              </p>
+              <p className="text-error-500 text-sm">{errors.amount.message}</p>
             )}
           </div>
           <div className="grid w-full items-center">
@@ -180,7 +203,7 @@ export default function DrawerCreateTransaction({ buttonLabel = "Add Transaction
               Submit
             </Button>
             <DrawerClose asChild className="w-1/2">
-              <Button ref={btnCloseRef} variant="outline">Cancel</Button>
+              <Button variant="outline">Cancel</Button>
             </DrawerClose>
           </div>
         </form>

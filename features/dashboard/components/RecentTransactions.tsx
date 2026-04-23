@@ -5,15 +5,8 @@ import DataTable, { Pagination } from "@/components/ui/data-table";
 import recentTransactionsColumns from "./RecentTransactionsColumns";
 import { useGetExpenses } from "@/features/expenses/services/useExpenses";
 import { useState } from "react";
-import { QueryParams } from "@/lib/buildQueryParams";
+import { defaultQueryParams, QueryParams } from "@/lib/buildQueryParams";
 import { PaginationState } from "@tanstack/react-table";
-
-const defaultQueryParams: QueryParams = {
-  page: 1,
-  limit: 10,
-  sortBy: "created_at",
-  order: "desc",
-};
 
 export default function RecentTransactions() {
   const [queryParams, setQueryParams] =

@@ -16,6 +16,13 @@ export type QueryParams = {
   expense_end_date?: string;
 };
 
+export const defaultQueryParams: QueryParams = {
+  page: 1,
+  limit: 10,
+  sortBy: "created_at",
+  order: "desc",
+};
+
 export const buildQueryParams = (params: QueryParams) => {
   const query = new URLSearchParams();
 

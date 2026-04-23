@@ -49,8 +49,19 @@ export const useCreateExpense = (expense: ExpenseRequest) => {
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [PREFIX.EXPENSES, PREFIX.DASHBOARD_OVERVIEW, PREFIX.CATEGORIES] })
-      queryClient.refetchQueries({ queryKey: [PREFIX.EXPENSES, PREFIX.DASHBOARD_OVERVIEW, PREFIX.CATEGORIES], exact: false })
-    }
-  })
-}
+      // refetch all dashboard services
+      queryClient.invalidateQueries({
+        predicate: (query) =>
+          query.queryKey[0] === PREFIX.GET &&
+          (
+            [
+              PREFIX.DASHBOARD_OVERVIEW,
+              PREFIX.CATEGORIES,
+              PREFIX.EXPENSES,
+              PREFIX.ACTIVE_BUDGET_PLAN,
+            ] as string[]
+          ).includes((query.queryKey[1] as string) || ""),
+      });
+    },
+  });
+};
